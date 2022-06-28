@@ -11,7 +11,7 @@ df_canal2 <- canais[[2]]
 head(df_canal1)
 head(df_canal2)
 
-# Calcula o número acumulado de inscritos para cada canal
+# Calcula o número acumulado Y de inscritos para cada canal
 df_canal1$INSCRITOS <- df_canal1$INSCRITOS / 100000
 df_canal1$Y <- cumsum(df_canal1$INSCRITOS)
 
@@ -59,22 +59,19 @@ plot(df_canal2$Y ~ df_canal2$DIAS,
      cex = 0.1
 )
 
-# Aplica linha de corte no dia 850
+# Aplica linha de corte no dia 607
 abline(v = 607)
-
-# Mostra os gráficos lado a lado
-par(mfrow = c(1, 2), mar = c(2.6, 3, 1.2, 0.5), mgp = c(1.6, 0.6, 0))
 
 
 ##### CANAL 1 #####
 
 
 # Calcula a perda variando os parâmetros para encontrar o melhor,
-# mais próximo do real
+# mais próximo encontrado em c(24, 0.007, 600)
 fc_perda(par = c(24, 0.007, 600), y = df_canal1$Y, dias = df_canal1$DIAS)
 
 
-# Otimiza o modelo com utilizando os parâmetros encontrados manualmente
+# Otimiza o modelo utilizando os parâmetros encontrados manualmente
 tmp <- optim(
      par = c(24, 0.007, 600),
      fn = fc_perda,
@@ -83,8 +80,9 @@ tmp <- optim(
      method = "Nelder-Mead"
 )
 
-round(tmp$par, 3)
+# round(tmp$par, 3)
 
+# Plota o gráfico com o predito
 plot(df_canal1$Y ~ df_canal1$DIAS,
      xlim = c(0, 1215),
      ylim = c(0, 25),
@@ -94,30 +92,21 @@ plot(df_canal1$Y ~ df_canal1$DIAS,
      type = "o",
      cex = 0.1
 )
-
 abline(v = 850)
-
 dias <- 1:c(850 + 365)
-
 predito <- f_log(
      dias = dias,
      l = tmp$par[1],
      beta = tmp$par[2],
      beta0 = tmp$par[3]
 )
-
 lines(dias, predito, col = "green")
 
 
 ##### CANAL 2 #####
 
-
-# Calcula a perda variando os parâmetros para encontrar o melhor,
-# mais próximo do real
 fc_perda(par = c(27, 0.008, 620), y = df_canal2$Y, dias = df_canal2$DIAS)
 
-
-# Otimiza o modelo com utilizando os parâmetros encontrados manualmente
 tmp <- optim(
      par = c(27, 0.008, 620),
      fn = fc_perda,
@@ -126,7 +115,7 @@ tmp <- optim(
      method = "Nelder-Mead"
 )
 
-round(tmp$par, 3)
+# round(tmp$par, 3)
 
 plot(df_canal2$Y ~ df_canal2$DIAS,
      ylab = "Número de inscritos*100000",
@@ -137,17 +126,12 @@ plot(df_canal2$Y ~ df_canal2$DIAS,
      type = "p",
      cex = 0.1
 )
-
-# Aplica linha de corte no dia 850
 abline(v = 607)
-
 dias <- 1:c(850 + 365)
-
 predito <- f_log(
      dias = dias,
      l = tmp$par[1],
      beta = tmp$par[2],
      beta0 = tmp$par[3]
 )
-
 lines(dias, predito, col = "blue")
