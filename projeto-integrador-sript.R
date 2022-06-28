@@ -72,7 +72,7 @@ fc_perda(par = c(24, 0.007, 600), y = df_canal1$Y, dias = df_canal1$DIAS)
 
 
 # Otimiza o modelo utilizando os parâmetros encontrados manualmente
-tmp <- optim(
+otimizado <- optim(
      par = c(24, 0.007, 600),
      fn = fc_perda,
      y = df_canal1$Y,
@@ -80,7 +80,7 @@ tmp <- optim(
      method = "Nelder-Mead"
 )
 
-# round(tmp$par, 3)
+# round(otimizado$par, 3)
 
 # Plota o gráfico com o predito
 plot(df_canal1$Y ~ df_canal1$DIAS,
@@ -96,9 +96,9 @@ abline(v = 850)
 dias <- 1:c(850 + 365)
 predito <- f_log(
      dias = dias,
-     l = tmp$par[1],
-     beta = tmp$par[2],
-     beta0 = tmp$par[3]
+     l = otimizado$par[1],
+     beta = otimizado$par[2],
+     beta0 = otimizado$par[3]
 )
 lines(dias, predito, col = "green")
 
@@ -107,7 +107,7 @@ lines(dias, predito, col = "green")
 
 fc_perda(par = c(27, 0.008, 620), y = df_canal2$Y, dias = df_canal2$DIAS)
 
-tmp <- optim(
+otimizado <- optim(
      par = c(27, 0.008, 620),
      fn = fc_perda,
      y = df_canal2$Y,
@@ -115,7 +115,7 @@ tmp <- optim(
      method = "Nelder-Mead"
 )
 
-# round(tmp$par, 3)
+# round(otimizado$par, 3)
 
 plot(df_canal2$Y ~ df_canal2$DIAS,
      ylab = "Número de inscritos*100000",
@@ -130,8 +130,8 @@ abline(v = 607)
 dias <- 1:c(850 + 365)
 predito <- f_log(
      dias = dias,
-     l = tmp$par[1],
-     beta = tmp$par[2],
-     beta0 = tmp$par[3]
+     l = otimizado$par[1],
+     beta = otimizado$par[2],
+     beta0 = otimizado$par[3]
 )
 lines(dias, predito, col = "blue")
